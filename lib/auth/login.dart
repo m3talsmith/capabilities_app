@@ -38,9 +38,7 @@ class _LoginState extends ConsumerState<Login> {
             ),
           ),
           ContentContainer(
-            backgroundColor: Theme.of(
-              context,
-            ).colorScheme.surface.withAlpha(225),
+            backgroundColor: Theme.of(context).colorScheme.surface,
             margin: EdgeInsets.only(
               left: width * 0.33,
               right: width * 0.33,
@@ -80,6 +78,7 @@ class _LoginState extends ConsumerState<Login> {
             ),
           ),
           ContentContainer(
+            backgroundColor: Theme.of(context).colorScheme.surface,
             margin: EdgeInsets.only(
               left: width * 0.33,
               right: width * 0.33,
