@@ -12,4 +12,11 @@ class Token {
 
   factory Token.fromJson(Map<String, dynamic> json) => _$TokenFromJson(json);
   Map<String, dynamic> toJson() => _$TokenToJson(this);
+
+  bool get isValid {
+    if (value == null) return false;
+    if (expiresAt == null) return false;
+    if (expiresAt!.isBefore(DateTime.now())) return false;
+    return true;
+  }
 }
