@@ -6,9 +6,9 @@ import 'package:http/http.dart' as http;
 
 import '../ui/screen_container.dart';
 import 'register.dart';
-import '../providers/token_provider.dart';
+import '../providers/token.dart';
 import '../models/token.dart';
-import '../providers/auth_provider.dart';
+import '../providers/auth.dart';
 import '../ui/dashboard.dart';
 import '../requests/endpoints.dart';
 
@@ -60,7 +60,7 @@ class _LoginState extends ConsumerState<Login> {
     );
 
     ref.read(tokenProvider.notifier).setToken(token);
-    ref.read(authProvider.notifier).login(token);
+    ref.read(authProvider.notifier).state = token;
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => Dashboard()),

@@ -19,4 +19,10 @@ class Token {
     if (expiresAt!.isBefore(DateTime.now())) return false;
     return true;
   }
+
+  bool get isExpired {
+    if (expiresAt == null) return false;
+    if (expiresAt!.isBefore(DateTime.now())) return true;
+    return false;
+  }
 }
