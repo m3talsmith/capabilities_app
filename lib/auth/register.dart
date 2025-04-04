@@ -28,7 +28,6 @@ class _RegisterState extends ConsumerState<Register> {
   List<String> backupCodes = [];
 
   register(context) async {
-    final navigator = Navigator.of(context);
     final snackBar = SnackBar(content: Text('Registering...'));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
@@ -79,14 +78,15 @@ class _RegisterState extends ConsumerState<Register> {
 
     final json = jsonDecode(response.body);
     await FlutterClipboard.copy(json['data']['backup_codes'].join('\n'));
-    List<String> backupCodes = [];
+    List<String> newBackupCodes = [];
     for (var code in json['data']['backup_codes']) {
-      backupCodes.add(code);
+      log('code: $code');
+      newBackupCodes.add(code);
     }
-    log('backup codes: $backupCodes');
+    log('backup codes: $newBackupCodes');
     setState(() {
       showBackupCodes = true;
-      backupCodes = backupCodes;
+      backupCodes = newBackupCodes;
     });
   }
 
@@ -97,46 +97,71 @@ class _RegisterState extends ConsumerState<Register> {
     return ScreenContainer(
       child:
           showBackupCodes
-              ? Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Backup codes',
-                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.onInverseSurface,
+              ? ContentContainer(
+                margin: EdgeInsets.only(
+                  left: width > 1024 ? width * 0.33 : 0,
+                  right: width > 1024 ? width * 0.33 : 0,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Backup codes',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.headlineLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.onInverseSurface,
+                      ),
                     ),
-                  ),
-                  ContentContainer(
-                    backgroundColor: Theme.of(context).colorScheme.surface,
-                    margin: EdgeInsets.only(
-                      left: width * 0.33,
-                      right: width * 0.33,
-                      top: 32,
-                    ),
-                    child: Column(
-                      children: [
-                        ...backupCodes.map((code) => Text(code)),
-                        Text('Please save these codes in a secure location'),
+                    ContentContainer(
+                      backgroundColor: Theme.of(context).colorScheme.surface,
+                      margin: EdgeInsets.only(top: 32),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              ...backupCodes.map((code) => Text(code)),
+                              IconButton(
+                                onPressed: () {
+                                  FlutterClipboard.copy(backupCodes.join('\n'));
+                                },
+                                icon: Icon(Icons.copy),
+                              ),
+                            ],
+                          ),
+                          Text('Please save these codes in a secure location'),
 
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            FilledButton(
-                              onPressed: () {
-                                Navigator.of(context).pushReplacement(
-                                  MaterialPageRoute(
-                                    builder: (context) => Login(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              FilledButton(
+                                onPressed: () {
+                                  Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                      builder: (context) => Login(),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  'Done',
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.titleMedium?.copyWith(
+                                    color:
+                                        Theme.of(
+                                          context,
+                                        ).colorScheme.onInverseSurface,
                                   ),
-                                );
-                              },
-                              child: Text('Done'),
-                            ),
-                          ],
-                        ),
-                      ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               )
               : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -149,11 +174,7 @@ class _RegisterState extends ConsumerState<Register> {
                   ),
                   ContentContainer(
                     backgroundColor: Theme.of(context).colorScheme.surface,
-                    margin: EdgeInsets.only(
-                      left: width * 0.33,
-                      right: width * 0.33,
-                      top: 32,
-                    ),
+                    margin: EdgeInsets.only(top: 32),
                     child: Column(
                       children: [
                         AutofillGroup(
