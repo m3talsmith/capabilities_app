@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'screen_navigation_bar.dart';
 
 class ScreenContainer extends StatelessWidget {
   final Widget? child;
+  final ScreenNavigationBar? navigationBar;
 
-  const ScreenContainer({super.key, this.child});
+  const ScreenContainer({super.key, this.child, this.navigationBar});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,14 @@ class ScreenContainer extends StatelessWidget {
             fit: BoxFit.cover,
           ),
         ),
-        child: child,
+        child: Column(
+          children: [
+            navigationBar ?? SizedBox.shrink(),
+            navigationBar == null
+                ? Expanded(child: child ?? SizedBox.shrink())
+                : child ?? SizedBox.shrink(),
+          ],
+        ),
       ),
     );
   }
