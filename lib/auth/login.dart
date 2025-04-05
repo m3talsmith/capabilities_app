@@ -9,7 +9,7 @@ import 'register.dart';
 import '../providers/token.dart';
 import '../models/token.dart';
 import '../providers/auth.dart';
-import '../ui/dashboard.dart';
+import '../teams/dashboard.dart';
 import '../requests/endpoints.dart';
 
 class Login extends ConsumerStatefulWidget {
@@ -74,8 +74,8 @@ class _LoginState extends ConsumerState<Login> {
     return ScreenContainer(
       child: ContentContainer(
         margin: EdgeInsets.only(
-          left: width > 1024 ? width * 0.33 : 0,
-          right: width > 1024 ? width * 0.33 : 0,
+          left: width > 700 ? width * 0.33 : 0,
+          right: width > 700 ? width * 0.33 : 0,
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

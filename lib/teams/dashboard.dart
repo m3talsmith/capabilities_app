@@ -8,7 +8,17 @@ class Dashboard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return const Scaffold(
-      body: Center(child: ScreenContainer(child: Text('Dashboard'))),
+      body: ScreenContainer(
+        child: Column(
+          children: [
+            Text('Dashboard'),
+            Text('Dashboard'),
+            Text('Dashboard'),
+            Text('Dashboard'),
+            Text('Dashboard'),
+          ],
+        ),
+      ),
     );
   }
 }

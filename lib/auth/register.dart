@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:clipboard/clipboard.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 import '../ui/screen_container.dart';
 import 'login.dart';
@@ -118,10 +119,40 @@ class _RegisterState extends ConsumerState<Register> {
                       margin: EdgeInsets.only(top: 32),
                       child: Column(
                         children: [
+                          SelectableRegion(
+                            selectionControls: MaterialTextSelectionControls(),
+                            child: StaggeredGrid.count(
+                              crossAxisCount:
+                                  MediaQuery.of(context).size.width ~/ 450,
+                              children:
+                                  backupCodes
+                                      .map(
+                                        (code) => Container(
+                                          width: 450,
+                                          margin: EdgeInsets.all(8),
+                                          decoration: BoxDecoration(
+                                            color: Theme.of(context)
+                                                .colorScheme
+                                                .inverseSurface
+                                                .withAlpha(15),
+                                          ),
+                                          child: Text(
+                                            code,
+                                            textAlign: TextAlign.center,
+                                            style: Theme.of(
+                                              context,
+                                            ).textTheme.bodySmall?.copyWith(
+                                              fontFamily: 'monospace',
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                      .toList(),
+                            ),
+                          ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              ...backupCodes.map((code) => Text(code)),
                               IconButton(
                                 onPressed: () {
                                   FlutterClipboard.copy(backupCodes.join('\n'));
@@ -130,8 +161,11 @@ class _RegisterState extends ConsumerState<Register> {
                               ),
                             ],
                           ),
-                          Text('Please save these codes in a secure location'),
-
+                          Text(
+                            'Please save these codes in a secure location',
+                            style: Theme.of(context).textTheme.titleMedium
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
@@ -163,137 +197,142 @@ class _RegisterState extends ConsumerState<Register> {
                   ],
                 ),
               )
-              : Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Register',
-                    style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                      color: Theme.of(context).colorScheme.onInverseSurface,
+              : ContentContainer(
+                margin: EdgeInsets.only(
+                  left: width > 700 ? width * 0.33 : 0,
+                  right: width > 700 ? width * 0.33 : 0,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Register',
+                      style: Theme.of(
+                        context,
+                      ).textTheme.headlineLarge?.copyWith(
+                        color: Theme.of(context).colorScheme.onInverseSurface,
+                      ),
                     ),
-                  ),
-                  ContentContainer(
-                    backgroundColor: Theme.of(context).colorScheme.surface,
-                    margin: EdgeInsets.only(top: 32),
-                    child: Column(
-                      children: [
-                        AutofillGroup(
-                          child: TextField(
-                            controller: firstNameController,
-                            decoration: InputDecoration(
-                              labelText: 'First Name',
-                              prefixIcon: Icon(Icons.text_fields),
-                            ),
-                            autofillHints: [AutofillHints.givenName],
-                            onSubmitted: (value) => register(context),
-                          ),
-                        ),
-                        AutofillGroup(
-                          child: TextField(
-                            controller: lastNameController,
-                            decoration: InputDecoration(
-                              labelText: 'Last Name',
-                              prefixIcon: Icon(Icons.text_fields),
-                            ),
-                            autofillHints: [AutofillHints.familyName],
-                            onSubmitted: (value) => register(context),
-                          ),
-                        ),
-                        AutofillGroup(
-                          child: TextField(
-                            controller: usernameController,
-                            decoration: InputDecoration(
-                              labelText: 'Username',
-                              prefixIcon: Icon(Icons.person),
-                            ),
-                            autofillHints: [AutofillHints.username],
-                            onSubmitted: (value) => register(context),
-                          ),
-                        ),
-                        AutofillGroup(
-                          child: TextField(
-                            controller: passwordController,
-                            decoration: InputDecoration(
-                              labelText: 'Password',
-                              prefixIcon: Icon(Icons.password),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  isPasswordVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    isPasswordVisible = !isPasswordVisible;
-                                  });
-                                },
+                    ContentContainer(
+                      backgroundColor: Theme.of(context).colorScheme.surface,
+                      margin: EdgeInsets.only(top: 32),
+                      child: Column(
+                        children: [
+                          AutofillGroup(
+                            child: TextField(
+                              controller: firstNameController,
+                              decoration: InputDecoration(
+                                labelText: 'First Name',
+                                prefixIcon: Icon(Icons.text_fields),
                               ),
+                              autofillHints: [AutofillHints.givenName],
+                              onSubmitted: (value) => register(context),
                             ),
-                            autofillHints: [AutofillHints.password],
-                            obscureText: !isPasswordVisible,
-                            onSubmitted: (value) => register(context),
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 16),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              FilledButton(
-                                onPressed: () {
-                                  register(context);
-                                },
-                                child: Text(
-                                  'Register',
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.titleMedium?.copyWith(
-                                    color:
-                                        Theme.of(
-                                          context,
-                                        ).colorScheme.onInverseSurface,
+                          AutofillGroup(
+                            child: TextField(
+                              controller: lastNameController,
+                              decoration: InputDecoration(
+                                labelText: 'Last Name',
+                                prefixIcon: Icon(Icons.text_fields),
+                              ),
+                              autofillHints: [AutofillHints.familyName],
+                              onSubmitted: (value) => register(context),
+                            ),
+                          ),
+                          AutofillGroup(
+                            child: TextField(
+                              controller: usernameController,
+                              decoration: InputDecoration(
+                                labelText: 'Username',
+                                prefixIcon: Icon(Icons.person),
+                              ),
+                              autofillHints: [AutofillHints.username],
+                              onSubmitted: (value) => register(context),
+                            ),
+                          ),
+                          AutofillGroup(
+                            child: TextField(
+                              controller: passwordController,
+                              decoration: InputDecoration(
+                                labelText: 'Password',
+                                prefixIcon: Icon(Icons.password),
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    isPasswordVisible
+                                        ? Icons.visibility
+                                        : Icons.visibility_off,
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      isPasswordVisible = !isPasswordVisible;
+                                    });
+                                  },
+                                ),
+                              ),
+                              autofillHints: [AutofillHints.password],
+                              obscureText: !isPasswordVisible,
+                              onSubmitted: (value) => register(context),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                FilledButton(
+                                  onPressed: () {
+                                    register(context);
+                                  },
+                                  child: Text(
+                                    'Register',
+                                    style: Theme.of(
+                                      context,
+                                    ).textTheme.titleMedium?.copyWith(
+                                      color:
+                                          Theme.of(
+                                            context,
+                                          ).colorScheme.onInverseSurface,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  ContentContainer(
-                    margin: EdgeInsets.only(
-                      left: width * 0.33,
-                      right: width * 0.33,
-                      top: 16,
-                    ),
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        FilledButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => Login()),
-                            );
-                          },
-                          child: Text(
-                            'Login',
-                            style: Theme.of(
-                              context,
-                            ).textTheme.titleMedium?.copyWith(
-                              color:
-                                  Theme.of(
-                                    context,
-                                  ).colorScheme.onInverseSurface,
+                              ],
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    ContentContainer(
+                      margin: EdgeInsets.only(top: 32),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          FilledButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Login(),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              'Login',
+                              style: Theme.of(
+                                context,
+                              ).textTheme.titleMedium?.copyWith(
+                                color:
+                                    Theme.of(
+                                      context,
+                                    ).colorScheme.onInverseSurface,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
     );
   }
