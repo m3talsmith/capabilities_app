@@ -26,6 +26,7 @@ class _RegisterState extends ConsumerState<Register> {
   final passwordController = TextEditingController();
   bool isPasswordVisible = false;
   bool showBackupCodes = false;
+  bool isCopied = false;
   List<String> backupCodes = [];
 
   register(context) async {
@@ -151,13 +152,20 @@ class _RegisterState extends ConsumerState<Register> {
                             ),
                           ),
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              IconButton(
+                              TextButton.icon(
                                 onPressed: () {
                                   FlutterClipboard.copy(backupCodes.join('\n'));
+                                  setState(() {
+                                    isCopied = true;
+                                  });
                                 },
-                                icon: Icon(Icons.copy),
+                                icon:
+                                    isCopied
+                                        ? Icon(Icons.check)
+                                        : Icon(Icons.copy),
+                                label: Text('Copy Backup Codes'),
                               ),
                             ],
                           ),
