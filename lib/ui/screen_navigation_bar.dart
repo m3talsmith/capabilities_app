@@ -9,6 +9,7 @@ class ScreenNavigationBar extends ConsumerWidget {
   final List<Widget>? actions;
   final Color? backgroundColor;
   final Color? titleColor;
+  final bool? showLogout;
 
   const ScreenNavigationBar({
     super.key,
@@ -17,6 +18,7 @@ class ScreenNavigationBar extends ConsumerWidget {
     this.actions,
     this.backgroundColor,
     this.titleColor,
+    this.showLogout = true,
   });
 
   @override
@@ -59,7 +61,7 @@ class ScreenNavigationBar extends ConsumerWidget {
               ...navigationItems ?? [],
               Expanded(child: SizedBox.shrink()),
               ...(actions ?? []),
-              if (auth != null)
+              if (auth != null && showLogout == true)
                 ScreenNavigationItem(
                   icon: Icons.logout,
                   onPressed: () {
@@ -113,7 +115,27 @@ class ScreenNavigationItem extends StatelessWidget {
                 : backgroundColor ?? Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
       ),
-      child: IconButton(onPressed: onPressed, icon: Icon(icon)),
+      child: Row(
+        children: [
+          IconButton(
+            onPressed: onPressed,
+            icon: Icon(
+              icon,
+              color: iconColor ?? Theme.of(context).colorScheme.onSurface,
+            ),
+          ),
+          if (title != null)
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Text(
+                title ?? '',
+                style: TextStyle(
+                  color: textColor ?? Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
+            ),
+        ],
+      ),
     );
   }
 }

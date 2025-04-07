@@ -12,17 +12,26 @@ class Dashboard extends ConsumerWidget {
     return Scaffold(
       body: ScreenContainer(
         navigationBar: ScreenNavigationBar(title: 'Dashboard'),
-        child: ContentContainer(
-          backgroundColor: Theme.of(context).colorScheme.surface,
-          child: Column(
-            children: [
-              Text('Dashboard'),
-              Text('Dashboard'),
-              Text('Dashboard'),
-              Text('Dashboard'),
-              Text('Dashboard'),
-            ],
-          ),
+        child: Column(
+          children: [
+            ContentContainer(
+              backgroundColor: Theme.of(context).colorScheme.surface,
+              child: Text('Dashboard'),
+            ),
+            ScreenNavigationBar(
+              backgroundColor: Theme.of(
+                context,
+              ).colorScheme.surface.withAlpha(50),
+              showLogout: false,
+              actions: [
+                ScreenNavigationItem(
+                  icon: Icons.add,
+                  onPressed: () {},
+                  title: 'Create Team',
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
