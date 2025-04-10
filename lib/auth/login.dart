@@ -9,7 +9,7 @@ import 'register.dart';
 import '../providers/token.dart';
 import '../models/token.dart';
 import '../providers/auth.dart';
-import '../teams/dashboard.dart';
+import '../teams/teams.dart';
 import '../requests/endpoints.dart';
 
 class Login extends ConsumerStatefulWidget {
@@ -63,7 +63,7 @@ class _LoginState extends ConsumerState<Login> {
     ref.read(authProvider.notifier).state = token;
     Navigator.pushReplacement(
       context,
-      MaterialPageRoute(builder: (context) => Dashboard()),
+      MaterialPageRoute(builder: (context) => TeamsView()),
     );
   }
 

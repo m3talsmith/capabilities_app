@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth.dart';
 import '../auth/login.dart';
+import '../teams/teams.dart';
 
 class ScreenNavigationBar extends ConsumerWidget {
   final List<ScreenNavigationItem>? navigationItems;
@@ -10,6 +11,8 @@ class ScreenNavigationBar extends ConsumerWidget {
   final Color? backgroundColor;
   final Color? titleColor;
   final bool? showLogout;
+  final bool? showBackButton;
+  final double? width;
 
   const ScreenNavigationBar({
     super.key,
@@ -19,18 +22,22 @@ class ScreenNavigationBar extends ConsumerWidget {
     this.backgroundColor,
     this.titleColor,
     this.showLogout = true,
+    this.width,
+    this.showBackButton = true,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final canPop = Navigator.canPop(context);
     final auth = ref.watch(authProvider);
+    final width =
+        this.width ??
+        (MediaQuery.of(context).size.width > 1024
+            ? MediaQuery.of(context).size.width * 0.66
+            : MediaQuery.of(context).size.width);
 
     return Container(
-      width:
-          MediaQuery.of(context).size.width > 1024
-              ? MediaQuery.of(context).size.width * 0.66
-              : MediaQuery.of(context).size.width,
+      width: width,
       height: 40,
       margin: EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -53,12 +60,38 @@ class ScreenNavigationBar extends ConsumerWidget {
           ),
           Row(
             children: [
-              if (canPop)
-                ScreenNavigationItem(
-                  icon: Icons.arrow_back,
-                  onPressed: () => Navigator.pop(context),
+              Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.surface,
+                  borderRadius: BorderRadius.circular(20),
                 ),
-              ...navigationItems ?? [],
+                child: Row(
+                  children: [
+                    if (canPop && showBackButton == true)
+                      ScreenNavigationItem(
+                        icon: Icons.arrow_back,
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ...[
+                      ScreenNavigationItem(
+                        icon: Icons.workspaces_rounded,
+                        onPressed:
+                            () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => TeamsView(),
+                              ),
+                            ),
+                      ),
+                      ScreenNavigationItem(
+                        icon: Icons.person_rounded,
+                        onPressed: () {},
+                      ),
+                    ],
+                    ...navigationItems ?? [],
+                  ],
+                ),
+              ),
+
               Expanded(child: SizedBox.shrink()),
               ...(actions ?? []),
               if (auth != null && showLogout == true)
@@ -115,27 +148,29 @@ class ScreenNavigationItem extends StatelessWidget {
                 : backgroundColor ?? Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Row(
-        children: [
-          IconButton(
-            onPressed: onPressed,
-            icon: Icon(
-              icon,
-              color: iconColor ?? Theme.of(context).colorScheme.onSurface,
-            ),
-          ),
-          if (title != null)
-            Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: Text(
-                title ?? '',
-                style: TextStyle(
-                  color: textColor ?? Theme.of(context).colorScheme.onSurface,
+      child:
+          title != null
+              ? TextButton.icon(
+                style: TextButton.styleFrom(minimumSize: Size(50, 50)),
+                onPressed: onPressed,
+                icon: Icon(
+                  icon,
+                  color: iconColor ?? Theme.of(context).colorScheme.onSurface,
+                ),
+                label: Text(
+                  title ?? '',
+                  style: TextStyle(
+                    color: textColor ?? Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+              )
+              : IconButton(
+                onPressed: onPressed,
+                icon: Icon(
+                  icon,
+                  color: iconColor ?? Theme.of(context).colorScheme.onSurface,
                 ),
               ),
-            ),
-        ],
-      ),
     );
   }
 }

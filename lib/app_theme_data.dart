@@ -10,6 +10,18 @@ class AppThemeData {
       onSecondary: Colors.white,
     ),
     useMaterial3: true,
-    textTheme: GoogleFonts.koHoTextTheme(),
+    textTheme: GoogleFonts.koHoTextTheme().copyWith(
+      labelLarge: GoogleFonts.koHoTextTheme().labelLarge?.copyWith(
+        fontWeight: FontWeight.bold,
+        fontSize: 16,
+      ),
+      labelMedium: GoogleFonts.koHoTextTheme().labelMedium?.copyWith(
+        fontWeight: FontWeight.bold,
+        fontSize: 14,
+      ),
+      labelSmall: GoogleFonts.koHoTextTheme().labelSmall?.copyWith(
+        fontSize: 12,
+      ),
+    ),
   );
 }
