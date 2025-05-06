@@ -3,16 +3,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth.dart';
 import '../auth/login.dart';
 import '../teams/teams.dart';
+import '../skills/skills.dart';
+import '../dashboard/dashboard.dart';
+
+enum ScreenActiveItem { teams, skills, dashboard }
 
 class ScreenNavigationBar extends ConsumerWidget {
   final List<ScreenNavigationItem>? navigationItems;
   final String? title;
   final List<Widget>? actions;
   final Color? backgroundColor;
+  final Color? activeBackgroundColor;
+  final Color? activeColor;
   final Color? titleColor;
   final bool? showLogout;
   final bool? showBackButton;
   final double? width;
+  final ScreenActiveItem? activeItem;
 
   const ScreenNavigationBar({
     super.key,
@@ -21,9 +28,12 @@ class ScreenNavigationBar extends ConsumerWidget {
     this.actions,
     this.backgroundColor,
     this.titleColor,
+    this.activeBackgroundColor,
+    this.activeColor,
     this.showLogout = true,
     this.width,
     this.showBackButton = true,
+    this.activeItem = ScreenActiveItem.dashboard,
   });
 
   @override
@@ -74,7 +84,24 @@ class ScreenNavigationBar extends ConsumerWidget {
                       ),
                     ...[
                       ScreenNavigationItem(
-                        icon: Icons.workspaces_rounded,
+                        icon: Icons.dashboard_rounded,
+                        title: 'Dashboard',
+                        isActive: activeItem == ScreenActiveItem.dashboard,
+                        activeBackgroundColor: activeBackgroundColor,
+                        activeColor: activeColor,
+                        onPressed:
+                            () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => DashboardView(),
+                              ),
+                            ),
+                      ),
+                      ScreenNavigationItem(
+                        icon: Icons.diversity_2_rounded,
+                        title: 'Teams',
+                        isActive: activeItem == ScreenActiveItem.teams,
+                        activeBackgroundColor: activeBackgroundColor,
+                        activeColor: activeColor,
                         onPressed:
                             () => Navigator.of(context).push(
                               MaterialPageRoute(
@@ -83,8 +110,17 @@ class ScreenNavigationBar extends ConsumerWidget {
                             ),
                       ),
                       ScreenNavigationItem(
-                        icon: Icons.person_rounded,
-                        onPressed: () {},
+                        icon: Icons.rocket_launch_rounded,
+                        title: 'Skills',
+                        isActive: activeItem == ScreenActiveItem.skills,
+                        activeBackgroundColor: activeBackgroundColor,
+                        activeColor: activeColor,
+                        onPressed:
+                            () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => SkillsView(),
+                              ),
+                            ),
                       ),
                     ],
                     ...navigationItems ?? [],
@@ -119,10 +155,12 @@ class ScreenNavigationItem extends StatelessWidget {
   final Function()? onPressed;
   final Color? backgroundColor;
   final Color? activeBackgroundColor;
+  final Color? activeColor;
   final Color? iconColor;
   final Color? textColor;
   final bool? isActive;
   final EdgeInsets? padding;
+  final bool? showTitle;
 
   const ScreenNavigationItem({
     super.key,
@@ -131,10 +169,12 @@ class ScreenNavigationItem extends StatelessWidget {
     this.onPressed,
     this.backgroundColor,
     this.activeBackgroundColor,
+    this.activeColor,
     this.iconColor,
     this.textColor,
     this.isActive,
     this.padding,
+    this.showTitle = false,
   });
 
   @override
@@ -149,26 +189,57 @@ class ScreenNavigationItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
       ),
       child:
-          title != null
+          title != null && showTitle == true
               ? TextButton.icon(
-                style: TextButton.styleFrom(minimumSize: Size(50, 50)),
+                style: TextButton.styleFrom(
+                  minimumSize: Size(50, 50),
+                  backgroundColor:
+                      isActive ?? false
+                          ? activeBackgroundColor ??
+                              Theme.of(context).colorScheme.surface
+                          : backgroundColor ??
+                              Theme.of(context).colorScheme.surface,
+                ),
                 onPressed: onPressed,
                 icon: Icon(
                   icon,
-                  color: iconColor ?? Theme.of(context).colorScheme.onSurface,
+                  color:
+                      isActive ?? false
+                          ? activeColor ??
+                              Theme.of(context).colorScheme.onPrimary
+                          : iconColor ??
+                              Theme.of(context).colorScheme.onSurface,
                 ),
                 label: Text(
                   title ?? '',
                   style: TextStyle(
-                    color: textColor ?? Theme.of(context).colorScheme.onSurface,
+                    color:
+                        isActive ?? false
+                            ? activeColor ??
+                                Theme.of(context).colorScheme.onPrimary
+                            : textColor ??
+                                Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
               )
               : IconButton(
                 onPressed: onPressed,
+                style: IconButton.styleFrom(
+                  backgroundColor:
+                      isActive ?? false
+                          ? activeBackgroundColor ??
+                              Theme.of(context).colorScheme.surface
+                          : backgroundColor ??
+                              Theme.of(context).colorScheme.surface,
+                ),
                 icon: Icon(
                   icon,
-                  color: iconColor ?? Theme.of(context).colorScheme.onSurface,
+                  color:
+                      isActive ?? false
+                          ? activeColor ??
+                              Theme.of(context).colorScheme.onPrimary
+                          : iconColor ??
+                              Theme.of(context).colorScheme.onSurface,
                 ),
               ),
     );

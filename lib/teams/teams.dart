@@ -1,8 +1,8 @@
 import 'package:capabilities_app/ui/content_card.dart';
-
 import '../ui/screen_container.dart';
 import '../ui/screen_navigation_bar.dart';
 import '../ui/content_container.dart';
+import '../ui/measurements.dart';
 import '../models/team.dart';
 import '../providers/teams.dart';
 import 'form.dart';
@@ -108,9 +108,13 @@ class _TeamsViewState extends ConsumerState<TeamsView> {
 
     return Scaffold(
       body: ScreenContainer(
-        navigationBar: ScreenNavigationBar(title: 'Teams'),
+        navigationBar: ScreenNavigationBar(
+          title: 'Teams',
+          activeItem: ScreenActiveItem.teams,
+          activeColor: Theme.of(context).colorScheme.primary,
+        ),
         child: SizedBox(
-          height: MediaQuery.of(context).size.height - 104,
+          height: MediaQuery.of(context).size.height - safeArea,
           child:
               isLoading
                   ? const Center(child: CircularProgressIndicator())

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'auth/login.dart';
-import 'teams/teams.dart';
+import 'dashboard/dashboard.dart';
 import 'providers/auth.dart';
 import 'app_theme_data.dart';
 
@@ -15,7 +15,7 @@ class App extends ConsumerWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppThemeData.theme,
-      home: auth?.isValid == true ? const TeamsView() : const Login(),
+      home: auth?.isValid == true ? const DashboardView() : const Login(),
     );
   }
 }

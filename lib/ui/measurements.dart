@@ -1,0 +1,1 @@
+const safeArea = 104;
