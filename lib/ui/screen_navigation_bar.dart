@@ -49,7 +49,7 @@ class ScreenNavigationBar extends ConsumerWidget {
     return Container(
       width: width,
       height: 40,
-      margin: EdgeInsets.all(16),
+      margin: EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color:
             backgroundColor ??
