@@ -53,14 +53,13 @@ class _TeamViewState extends ConsumerState<TeamView> {
                           ],
                         ),
                         data.isEmpty
-                            ? Center(
-                              child: Container(
-                                padding: EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  color: Theme.of(context).colorScheme.surface,
-                                  borderRadius: BorderRadius.circular(10),
+                            ? Expanded(
+                              child: Center(
+                                child: FilledButton.icon(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.add),
+                                  label: Text("Add Member"),
                                 ),
-                                child: Text("No users found"),
                               ),
                             )
                             : GridView.builder(
